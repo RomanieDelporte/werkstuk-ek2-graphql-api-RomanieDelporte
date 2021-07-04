@@ -40,12 +40,14 @@ module.exports = gql`
 	}
 
 	type Album {
+		id: ID
 		title: String
 		author: String
-		ReleaseDate: String
+		releaseDate: String
 		lengthOfTime: Int
 		albumCover: String
 		addedOn: Date
+		editedOn: Date
 	}
 
 	type Genre {

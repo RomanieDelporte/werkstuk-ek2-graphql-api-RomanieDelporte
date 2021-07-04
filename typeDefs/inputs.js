@@ -15,7 +15,7 @@ module.exports = gql`
 		artist: String
 		url: String
 		played: String
-		genre: [genreInput]
+		genres: [genreInput]
 	}
 
 	input Genre {
@@ -30,5 +30,17 @@ module.exports = gql`
 		email: String
 		password: String
 		isAdmin: Boolean
+	}
+
+	input AlbumInput {
+		id: ID
+		title: String
+		author: String
+		releaseDate: String
+		albumCover: String
+		addedOn: Date
+		editedOn: Date
+		genres: [genreInput]
+		songs: [songsInput]
 	}
 `;
