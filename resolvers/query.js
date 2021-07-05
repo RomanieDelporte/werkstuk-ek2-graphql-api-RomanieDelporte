@@ -2,12 +2,13 @@
 
 const { AuthenticationError } = require("apollo-server");
 const bcrypt = require("bcrypt");
-const { isEqualType } = require("graphql");
 const jwt = require("jsonwebtoken");
-const { User } = require("../mongo/model");
+const { User, Playlist } = require("../mongo/model");
 
 module.exports = {
 	Query: {
+		playlists: () => Playlist.find(),
+		playlist: (parent, { id }) => Playlist.findOne({ _id: id }),
 		login: async (parent, { user }, context) => {
 			const { email, password } = user;
 
@@ -44,5 +45,10 @@ module.exports = {
 				throw new AuthenticationError("Must authenticate");
 			else return User.findOne({ _id: id });
 		},
+		// albums: (parent, params, context) => {
+		// 	if (context.userId === "")
+		// 		throw new AuthenticationError("Must authenticate");
+		// 		else return Album.find()
+		// },
 	},
 };

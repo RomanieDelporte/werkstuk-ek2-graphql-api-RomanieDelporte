@@ -4,8 +4,6 @@ const pubsub = require("./pubsub");
 
 module.exports = {
 	Subscription: {
-		dummyItemAdded: {
-			subscribe: () => pubsub.asyncIterator("DUMMYITEM_ADDED"),
-		},
+		songAdded: { subscribe: () => pubsub.asyncIterator("SONG_ADDED") },
 	},
 };

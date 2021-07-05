@@ -7,5 +7,9 @@ module.exports = gql`
 		users: [User]
 		user(id: ID): User
 		login(user: UserInput): AuthData
+		playlists: [Playlist]
+		playlist(id: ID): Playlist
+		albums: [Album]
+		album(id: ID): Album
 	}
 `;

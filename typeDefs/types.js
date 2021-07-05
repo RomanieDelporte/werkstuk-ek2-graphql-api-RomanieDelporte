@@ -44,4 +44,13 @@ module.exports = gql`
 		title: String
 		id: ID!
 	}
+
+	type Album {
+		id: ID
+		title: String
+		owner: String
+		addedOn: Date
+		editedOn: Date
+		songs: [Song]
+	}
 `;
