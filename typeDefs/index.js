@@ -1,8 +1,19 @@
-/** @format */
+/**
+ * Indexing TypeDefs
+ *
+ * @format
+ */
 
 const types = require("./types");
+const inputs = require("./inputs");
 const queries = require("./queries");
 const mutations = require("./mutations");
-const inputs = require("./inputs");
+//  const subscriptions = require('./subscriptions');
 
-module.exports = [types, queries, mutations, inputs];
+module.exports = [
+	types,
+	inputs,
+	queries,
+	mutations,
+	//  subscriptions
+];

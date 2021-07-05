@@ -28,9 +28,11 @@ const startServer = () => {
 			playground: true,
 			cors: true,
 			context: ({ req }) => {
+				// in de headers zit u json web token
+				//  als je de decodedtoken zou opvragen in je console zal je zien wier er ingelogt is zo niet ga weg en log opnieuw in
 				const authHeader = req.headers["authorization"];
-				// token opvragen en splitten en kijken of we een eerste waarde meekrijgen
 				const token = authHeader && authHeader.split(" ")[1];
+				console.log(token);
 				try {
 					const decodedToken = jwt.verify(token, process.env.TOKEN_SALT);
 					return decodedToken && decodedToken.userId

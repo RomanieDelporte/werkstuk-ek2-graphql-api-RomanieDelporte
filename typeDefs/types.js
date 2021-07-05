@@ -4,6 +4,7 @@ const { gql } = require("apollo-server");
 
 module.exports = gql`
 	scalar Date
+
 	type User {
 		id: ID!
 		firstname: String
@@ -12,7 +13,6 @@ module.exports = gql`
 		password: String
 		isAdmin: Boolean
 	}
-
 	type AuthData {
 		userId: ID
 		token: String
@@ -21,6 +21,7 @@ module.exports = gql`
 	}
 
 	type Playlist {
+		id: ID
 		title: String
 		author: String
 		addedOn: Date
@@ -36,22 +37,11 @@ module.exports = gql`
 		url: String
 		played: String
 		addedOn: Date
-		genre: [Genre]
-	}
-
-	type Album {
-		id: ID
-		title: String
-		author: String
-		releaseDate: String
-		lengthOfTime: Int
-		albumCover: String
-		addedOn: Date
-		editedOn: Date
+		genres: [Genre]
 	}
 
 	type Genre {
-		genre: String
-		id: ID
+		title: String
+		id: ID!
 	}
 `;
