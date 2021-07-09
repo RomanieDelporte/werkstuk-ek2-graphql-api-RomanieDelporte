@@ -28,7 +28,6 @@ module.exports = gql`
 		author: String
 		addedOn: Date
 		editedOn: Date
-		owner: ID
 		songs: [SongInput]
 	}
 

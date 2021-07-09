@@ -8,6 +8,7 @@ const PlaylistSchema = new mongoose.Schema({
 	author: String,
 	addedOn: Date,
 	editedOn: Date,
+	owner: String,
 	songs: [SongSchema],
 });
 

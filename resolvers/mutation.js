@@ -2,6 +2,7 @@
 
 const { ApolloError, AuthenticationError } = require("apollo-server");
 const bcrypt = require("bcrypt");
+const pubsub = require("./pubsub");
 const { User, Playlist } = require("../mongo/model");
 
 module.exports = {
@@ -39,15 +40,31 @@ module.exports = {
 				else throw new ApolloError(e.message);
 			}
 		},
-		addSongToPlaylist: async (parent, { playlistId, song }, context) => {
+		setPlaylistOwner: async (parent, { userId, playlistId }, context) => {
 			try {
 				const playlistExists = await Playlist.exists({ _id: playlistId });
 				if (!playlistExists) throw new ApolloError("No Playlist was found");
 
 				const playlist = await Playlist.findOne({ _id: playlistId });
 
+				playlist.owner = userId;
+				playlist.editedOn = new Date();
+
+				return await playlist.save();
+			} catch (e) {
+				if (e.extensions.code === "UNAUTHENTICATED") throw e;
+				else throw new ApolloError(e.message);
+			}
+		},
+		addSongToPlaylist: async (parent, { playlistId, song }, context) => {
+			try {
+				const playlistExists = await Playlist.exists({ _id: playlistId });
+				if (!playlistExists) throw new ApolloError("No playlist was found");
+
+				const playlist = await Playlist.findOne({ _id: playlistId });
+
 				if (context.userId !== playlist.owner) {
-					throw new AuthenticationError("User is not allowed to add songs");
+					throw new AuthenticationError("User is not allowed to add songs.");
 				}
 
 				playlist.songs.push(song);
