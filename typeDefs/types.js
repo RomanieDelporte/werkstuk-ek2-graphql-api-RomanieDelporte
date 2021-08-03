@@ -6,7 +6,7 @@ module.exports = gql`
 	scalar Date
 
 	type User {
-		id: ID!
+		id: ID
 		firstname: String
 		lastname: String
 		email: String
@@ -23,15 +23,16 @@ module.exports = gql`
 	type Playlist {
 		id: ID
 		title: String
-		author: String
 		addedOn: Date
 		editedOn: Date
 		owner: ID
 		songs: [Song]
+		image: String
+
 	}
 
 	type Song {
-		id: ID!
+		id: ID
 		title: String
 		artist: String
 		url: String
@@ -48,9 +49,10 @@ module.exports = gql`
 	type Album {
 		id: ID
 		title: String
-		owner: String
+		author: String
 		addedOn: Date
 		editedOn: Date
 		songs: [Song]
+		image: String
 	}
 `;

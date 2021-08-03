@@ -5,10 +5,11 @@ const SongSchema = require("./song");
 
 const AlbumSchema = new mongoose.Schema({
 	title: String,
-	owner: String,
-	addedOn: String,
-	editedOn: String,
+	author: String,
+	addedOn: Date,
+	editedOn: Date,
 	songs: [SongSchema],
+	image: String,
 });
 
-module.exports = SongSchema;
+module.exports = AlbumSchema;

@@ -25,10 +25,11 @@ module.exports = gql`
 	input PlaylistInput {
 		id: ID
 		title: String
-		author: String
 		addedOn: Date
 		editedOn: Date
+		owner: ID
 		songs: [SongInput]
+		image: String
 	}
 
 	input GenreInput {
@@ -39,9 +40,10 @@ module.exports = gql`
 	input AlbumInput {
 		id: ID
 		title: String
-		owner: String
+		author: String
 		addedOn: Date
 		editedOn: Date
 		songs: [SongInput]
+		image: String
 	}
 `;

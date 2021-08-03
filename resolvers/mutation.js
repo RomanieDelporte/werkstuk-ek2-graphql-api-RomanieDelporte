@@ -3,7 +3,7 @@
 const { ApolloError, AuthenticationError } = require("apollo-server");
 const bcrypt = require("bcrypt");
 const pubsub = require("./pubsub");
-const { User, Playlist } = require("../mongo/model");
+const { User, Playlist, Album } = require("../mongo/model");
 
 module.exports = {
 	Mutation: {
@@ -80,6 +80,58 @@ module.exports = {
 				if (e.extensions.code === "UNAUTHENTICATED") throw e;
 				else throw new ApolloError(e.message);
 			}
+		},
+		addSongsToAlbum: async (parent, { albumId, song }, context) => {
+			try {
+				const albumExists = await Album.exists({ _id: albumId });
+				if (!albumExists) throw new ApolloError("No playlist was found");
+
+				const album = await Album.findOne({ _id: albumId });
+
+				if (context.userId !== playlist.owner) {
+					throw new AuthenticationError("User is not allowed to add songs.");
+				}
+
+				album.songs.push(song);
+				album.editedOn = new Date();
+				const updatedAlbum = await album.save();
+
+				const newAlbum = updatedAlbum.songs[updatedAlbum.songs.length - 1];
+
+				pubsub.publish("SONG_ADDED", { albumAdded: newAlbum });
+
+				return album;
+			} catch (e) {
+				if (e.extensions.code === "UNAUTHENTICATED") throw e;
+				else throw new ApolloError(e.message);
+			}
+		},
+		addAlbum: async (parent, { album }, context) => {
+			try {
+				return await Album.create({
+					...album,
+					addedOn: new Date(),
+					editedOn: new Date(),
+					songs: [],
+				});
+			} catch (e) {
+				if (e.extensions.code === "UNAUTHENTICATED") throw e;
+				else throw new ApolloError(e.message);
+			}
+		},
+		deletePlaylist: async (parent, { id }, context) => {
+			if (context.userId === "")
+				throw new AuthenticationError("Must authenticate");
+			if (context.admin) throw new AuthenticationError("Not authorized");
+
+			const playlistsExists = await Playlist.exists({ _id: id });
+			if (!playlistsExists) throw new Error("Playlist don't exists");
+
+			const deletePlaylist = await Playlist.findByIdAndDelete(id);
+
+			return `Deleted '${
+				deletePlaylist.title ? deletePlaylist.title : "playlist"
+			}' is succesfully ended.`;
 		},
 	},
 };

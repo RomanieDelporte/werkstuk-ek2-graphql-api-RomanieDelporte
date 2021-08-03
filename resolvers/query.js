@@ -3,27 +3,30 @@
 const { AuthenticationError } = require("apollo-server");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User, Playlist } = require("../mongo/model");
+const { User, Playlist, Album } = require("../mongo/model");
 
 module.exports = {
 	Query: {
 		playlists: () => Playlist.find(),
 		playlist: (parent, { id }) => Playlist.findOne({ _id: id }),
+		albums: () => Album.find(),
+		album: (parent, { id }) => Album.findOne({ _id: id }),
 		login: async (parent, { user }, context) => {
 			const { email, password } = user;
 
 			const getUser = await User.findOne({ email });
 			if (!getUser) throw new Error("user does not exist!");
+			console.log(getUser);
 
-			const isEqual = bcrypt.compareSync(password, getUser.password);
-			if (!isEqual) throw new Error("Password is incorrect");
+			const isEquel = bcrypt.compareSync(password, getUser.password);
+			if (!isEquel) throw new Error("Password is incorrect");
 
 			const token = jwt.sign(
 				{
 					userId: getUser._id,
 					email: getUser.email,
-					firstname: getUser.firstname,
 					isAdmin: getUser.isAdmin,
+					firstname: getUser.firstname,
 				},
 				process.env.TOKEN_SALT,
 				{ expiresIn: "1h" },
@@ -45,10 +48,5 @@ module.exports = {
 				throw new AuthenticationError("Must authenticate");
 			else return User.findOne({ _id: id });
 		},
-		// albums: (parent, params, context) => {
-		// 	if (context.userId === "")
-		// 		throw new AuthenticationError("Must authenticate");
-		// 		else return Album.find()
-		// },
 	},
 };
