@@ -7,6 +7,7 @@ const SongSchema = new mongoose.Schema({
 	title: String,
 	artist: String,
 	url: String,
+	addedOn: Date,
 	genres: [GenreSchema],
 });
 

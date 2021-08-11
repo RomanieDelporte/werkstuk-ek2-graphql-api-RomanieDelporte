@@ -3,7 +3,7 @@
 const { ApolloError, AuthenticationError } = require("apollo-server");
 const bcrypt = require("bcrypt");
 const pubsub = require("./pubsub");
-const { User, Playlist, Album } = require("../mongo/model");
+const { User, Playlist, Album, Song, Genre } = require("../mongo/model");
 
 module.exports = {
 	Mutation: {
@@ -34,6 +34,30 @@ module.exports = {
 					addedOn: new Date(),
 					editedOn: new Date(),
 					songs: [],
+				});
+			} catch (e) {
+				if (e.extensions.code === "UNAUTHENTICATED") throw e;
+				else throw new ApolloError(e.message);
+			}
+		},
+		addSong: async (parent, { song }, context) => {
+			try {
+				return await Song.create({
+					...song,
+					addedOn: new Date(),
+					editedOn: new Date(),
+				});
+			} catch (e) {
+				if (e.extensions.code === "UNAUTHENTICATED") throw e;
+				else throw new ApolloError(e.message);
+			}
+		},
+		addGenre: async (parent, { genre }, context) => {
+			try {
+				return await Genre.create({
+					...genre,
+					addedOn: new Date(),
+					editedOn: new Date(),
 				});
 			} catch (e) {
 				if (e.extensions.code === "UNAUTHENTICATED") throw e;
@@ -72,6 +96,32 @@ module.exports = {
 				const updatedPlaylist = await playlist.save();
 
 				const newSong = updatedPlaylist.songs[updatedPlaylist.songs.length - 1];
+
+				pubsub.publish("SONG_ADDED", { songAdded: newSong });
+
+				return playlist;
+			} catch (e) {
+				if (e.extensions.code === "UNAUTHENTICATED") throw e;
+				else throw new ApolloError(e.message);
+			}
+		},
+		addGenresToSongs: async (parent, { songId, genre }, context) => {
+			try {
+				const playlistExists = await Song.exists({ _id: songId });
+				if (!playlistExists) throw new ApolloError("No playlist was found");
+
+				const playlist = await Song.findOne({ _id: songId });
+
+				// if (context.userId !== playlist.owner) {
+				// 	throw new AuthenticationError("User is not allowed to add songs.");
+				// }
+
+				playlist.genres.push(genre);
+				playlist.editedOn = new Date();
+				const updatedPlaylist = await playlist.save();
+
+				const newSong =
+					updatedPlaylist.genres[updatedPlaylist.genres.length - 1];
 
 				pubsub.publish("SONG_ADDED", { songAdded: newSong });
 
@@ -132,6 +182,32 @@ module.exports = {
 			return `Deleted '${
 				deletePlaylist.title ? deletePlaylist.title : "playlist"
 			}' is succesfully ended.`;
+		},
+		deleteAlbum: async (parent, { id }, context) => {
+			if (context.userId === "")
+				throw new AuthenticationError("Must authenticate");
+			if (context.admin) throw new AuthenticationError("Not authorized");
+
+			const albumExists = await Album.exists({ _id: id });
+			if (!albumExists) throw new Error("Playlist don't exists");
+
+			const deleteAlbum = await Album.findByIdAndDelete(id);
+
+			return `Deleted '${
+				deleteAlbum.title ? deleteAlbum.title : "album"
+			}' is succesfully ended.`;
+		},
+		editPlaylist: async (parent, { playlist }, context) => {
+			if (context.userId === "")
+				throw new AuthenticationError("Must authenticate");
+			if (context.admin) throw new AuthenticationError("Not Authorized");
+
+			const editedPlaylist = await Playlist.updateOne(
+				{ _id: playlist.id },
+				{ ...playlist, editedOn: new Date() },
+			);
+
+			return editedPlaylist;
 		},
 	},
 };

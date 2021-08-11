@@ -2,4 +2,7 @@
 
 const { PubSub } = require("graphql-subscriptions");
 
-module.exports = new PubSub();
+const pubsub = new PubSub();
+pubsub.ee.setMaxListeners(1000); // raise max listeners in event emitter
+
+module.exports = pubsub;

@@ -11,5 +11,9 @@ module.exports = gql`
 		playlist(id: ID): Playlist
 		albums: [Album]
 		album(id: ID): Album
+		songs: [Song]
+		song(id: ID): Song
+		genres: [Genre]
+		genre(id: ID): Genre
 	}
 `;

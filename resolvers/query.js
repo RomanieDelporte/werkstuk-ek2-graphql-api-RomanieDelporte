@@ -3,7 +3,7 @@
 const { AuthenticationError } = require("apollo-server");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User, Playlist, Album } = require("../mongo/model");
+const { User, Playlist, Album, Song, Genre } = require("../mongo/model");
 
 module.exports = {
 	Query: {
@@ -11,6 +11,10 @@ module.exports = {
 		playlist: (parent, { id }) => Playlist.findOne({ _id: id }),
 		albums: () => Album.find(),
 		album: (parent, { id }) => Album.findOne({ _id: id }),
+		songs: () => Song.find(),
+		song: (parent, { id }) => Song.findOne({ _id: id }),
+		genres: (parent, { id }) => Genre.findOne({ _id: id }),
+		genre: () => Genre.find(),
 		login: async (parent, { user }, context) => {
 			const { email, password } = user;
 
@@ -50,3 +54,15 @@ module.exports = {
 		},
 	},
 };
+
+// search: (parent, { search }, context) => {
+// 	if (!!search) {
+// 		const searchSongQuery = {
+// 			$or: [
+// 				{ title: { $regex: search, $options: 'i' } },
+// 				{ author: { $regex: search, $options: 'i' } }
+// 			]
+// 		};
+// 		return Song.find(searchSongQuery);
+// 	} else return [];
+// },

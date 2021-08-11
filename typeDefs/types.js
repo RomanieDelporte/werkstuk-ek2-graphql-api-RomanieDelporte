@@ -28,7 +28,7 @@ module.exports = gql`
 		owner: ID
 		songs: [Song]
 		image: String
-
+		visible: Boolean
 	}
 
 	type Song {

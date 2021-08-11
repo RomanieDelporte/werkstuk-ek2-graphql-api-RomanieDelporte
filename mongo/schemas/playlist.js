@@ -9,6 +9,7 @@ const PlaylistSchema = new mongoose.Schema({
 	editedOn: Date,
 	owner: String,
 	image: String,
+	visible: Boolean,
 	songs: [SongSchema],
 });
 

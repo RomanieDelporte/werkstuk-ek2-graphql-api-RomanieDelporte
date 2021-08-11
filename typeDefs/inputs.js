@@ -30,6 +30,7 @@ module.exports = gql`
 		owner: ID
 		songs: [SongInput]
 		image: String
+		visible: Boolean
 	}
 
 	input GenreInput {
