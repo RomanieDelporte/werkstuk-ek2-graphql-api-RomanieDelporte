@@ -13,7 +13,7 @@ module.exports = gql`
 	}
 
 	input SongInput {
-		id: ID
+		id: ID!
 		title: String
 		artist: String
 		url: String
