@@ -96,7 +96,7 @@ module.exports = {
 				const updatedPlaylist = await playlist.save();
 
 				const newSong = updatedPlaylist.songs[updatedPlaylist.songs.length - 1];
-
+				playlist.addedOn = new Date();
 				pubsub.publish("SONG_ADDED", { songAdded: newSong });
 
 				return playlist;

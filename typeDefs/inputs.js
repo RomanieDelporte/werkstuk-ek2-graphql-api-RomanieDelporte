@@ -20,6 +20,7 @@ module.exports = gql`
 		played: String
 		addedOn: Date
 		genres: [GenreInput]
+		albums: [AlbumInput]
 	}
 
 	input PlaylistInput {

@@ -39,6 +39,7 @@ module.exports = gql`
 		played: String
 		addedOn: Date
 		genres: [Genre]
+		albums: [Album]
 	}
 
 	type Genre {

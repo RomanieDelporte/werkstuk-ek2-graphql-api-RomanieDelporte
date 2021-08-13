@@ -11,6 +11,7 @@ const PlaylistSchema = new mongoose.Schema({
 	image: String,
 	visible: Boolean,
 	songs: [SongSchema],
+	
 });
 
 module.exports = PlaylistSchema;
