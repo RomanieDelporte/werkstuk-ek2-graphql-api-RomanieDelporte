@@ -54,15 +54,3 @@ module.exports = {
 		},
 	},
 };
-
-// search: (parent, { search }, context) => {
-// 	if (!!search) {
-// 		const searchSongQuery = {
-// 			$or: [
-// 				{ title: { $regex: search, $options: 'i' } },
-// 				{ author: { $regex: search, $options: 'i' } }
-// 			]
-// 		};
-// 		return Song.find(searchSongQuery);
-// 	} else return [];
-// },

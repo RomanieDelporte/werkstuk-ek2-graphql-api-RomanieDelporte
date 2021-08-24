@@ -1,8 +1,4 @@
-/**
- * Indexing TypeDefs
- *
- * @format
- */
+/** @format */
 
 const types = require("./types");
 const inputs = require("./inputs");

@@ -1,8 +1,4 @@
-/**
- * The GraphQL subscription
- *
- * @format
- */
+/** @format */
 
 const { gql } = require("apollo-server");
 

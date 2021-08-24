@@ -112,10 +112,6 @@ module.exports = {
 
 				const playlist = await Song.findOne({ _id: songId });
 
-				// if (context.userId !== playlist.owner) {
-				// 	throw new AuthenticationError("User is not allowed to add songs.");
-				// }
-
 				playlist.genres.push(genre);
 				playlist.editedOn = new Date();
 				const updatedPlaylist = await playlist.save();
